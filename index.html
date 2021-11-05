@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Edmond map</title>
+    <script defer src="mapviewer.js" charset="utf-8"></script>
+    <script defer src="testfetch.js" charset="utf-8"></script>
+    <link rel="stylesheet" type="text/css" href="index.css">
+
+    <!-- jsFiddle will insert css and js -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  </head>
+  <body>
+    <div id="map"></div>
+    <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+    <div>
+      <h3>Edmond research data map</h3>
+    </div>
+    <div id="collectionsListContainer">
+      <ul id="collectionsList">
+      </ul>
+    </div>
+  </body>
+</html>

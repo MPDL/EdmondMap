@@ -1,0 +1,49 @@
+/* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+#map {
+  height: 70%;
+}
+
+/* Optional: Makes the sample page fill the window. */
+html,
+body {
+  /* height: 100%;*/
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: bisque;
+}
+#map {
+  /*position: relative;*/
+  height: 450px;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+h3 {
+  height: 15px;
+  font-family: "Courier New", Courier, monospace;
+}
+#collectionsListContainer {
+  height: 450px;
+  overflow: scroll;
+  background-color: white;
+}
+.animation:hover {
+  transition: 0.4s;
+  cursor: pointer;
+  box-sizing: border-box;
+  background-color: rgb(171, 202, 219);
+}
+
+a {
+  text-decoration: none;
+}
+a:link,
+a:visited {
+  color: blue;
+}
+a:hover {
+  color: rgb(153, 0, 255);
+}
