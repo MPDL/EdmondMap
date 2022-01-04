@@ -2,11 +2,10 @@
 <html>
   <head>
     <title>Edmond map</title>
-    <script defer src="mapviewer.js" charset="utf-8"></script>
-    <script defer src="testfetch.js" charset="utf-8"></script>
+    <script defer src="edmond_map.js" charset="utf-8"></script>
     <link rel="stylesheet" type="text/css" href="index.css">
 
-    <!-- jsFiddle will insert css and js -->
+    <!-- load leaflet data: css and js -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
   </head>
@@ -14,7 +13,6 @@
     <!--Add wrapper for map and list sizing-->
     <div id="wrapper">
       <div id="map"></div>
-      <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
       <div id="title">
         <h3>Edmond research data map</h3>
       </div>

@@ -123,8 +123,6 @@ function makeList(listContent) {
       "</a>";
     // A marker appears on the map with the data popup
     listItem.onmouseover = function () {
-      console.log(element.title);
-      console.log(element.coordinates);
       element.marker.openPopup();
     };
     // Add listItem to the listElement
