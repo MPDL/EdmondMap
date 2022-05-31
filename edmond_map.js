@@ -17,8 +17,8 @@ L.control
   .addTo(map);
 
 //Fetch collections.json from server, parse it and visualize in the map.
-//fetch("https://qa-edmond.mpdl.mpg.de/edmond-map/EdmondMap/collections.json", {
-fetch("http://localhost/collections.json", {
+fetch("https://qa-edmond.mpdl.mpg.de/edmond-map/EdmondMap/collections.json", {
+  // fetch("http://localhost/collections.json", {
   mode: "cors",
 })
   .then(function (response) {
@@ -113,7 +113,7 @@ function makeList(listContent) {
   var listContainer = document.getElementById("collectionsList");
   listContent.forEach((element) => {
     listItem = document.createElement("li");
-    listItem.innerHTML = element.coordinates;
+    // listItem.innerHTML = element.coordinates;
     listItem.innerHTML =
       '<a class = "animation" href="' +
       "https://edmond.mpdl.mpg.de/imeji/collection/" +
