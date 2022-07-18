@@ -17,8 +17,8 @@ L.control
   .addTo(map);
 
 //Fetch collections.json from server, parse it and visualize in the map.
-fetch("https://qa-edmond.mpdl.mpg.de/edmond-map/EdmondMap/collections.json", {
-  // fetch("http://localhost/collections.json", {
+//fetch("https://qa-edmond.mpdl.mpg.de/edmond-map/EdmondMap/collections.json", {
+fetch("https://edmond.mpdl.mpg.de/api/search?q=geolocationLatitude:*&per_page=100&type=dataset&metadata_fields=citation:geolocation", {
   mode: "cors",
 })
   .then(function (response) {
@@ -29,11 +29,11 @@ fetch("https://qa-edmond.mpdl.mpg.de/edmond-map/EdmondMap/collections.json", {
       return;
     }
     // Examine the text in the response
-    response.json().then(function (data) {
+    response.json().then(function (result) {
       var listContent = [];
-      //Iterating over results in data and creating listcontent items
-      data.results.forEach((result) => {
-        var listContentElement = createListContentElement(result);
+      //Iterating over items in data and creating listcontent items
+      result.data.items.forEach((item) => {
+        var listContentElement = createListContentElement(item);
         if (listContentElement != null) {
           listContent.push(listContentElement);
         }
@@ -49,58 +49,64 @@ fetch("https://qa-edmond.mpdl.mpg.de/edmond-map/EdmondMap/collections.json", {
 /**
  * Creates new listContentElement Object from given result
  * only if result contains coordinates.
- * @param {*} result Result Object from json file
+ * @param {*} item Result Object from json file
  * @returns listContentElement or null if result has no coordinates
  */
-function createListContentElement(result) {
-  var additionalInfos = result.additionalInfos;
-  if (additionalInfos) {
-    var marker;
-    var coords = [];
-    additionalInfos.forEach((info) => {
-      if (info.label == "Geo-coordinates") {
-        coords.push({ coordinate: info.text });
-        marker = createMarker(info, result);
-      }
-    });
-    // Check if coordinates exist and return listContentElement Object
-    if (coords.length !== 0) {
-      return {
-        title: result.title,
-        id: result.id,
-        coordinates: coords,
-        marker: marker,
-      };
-    } else return null;
-  }
+function createListContentElement(item) {
+  var citationFields = item.metadataBlocks.citation.fields;
+  var marker;
+  var coords = [];
+  citationFields.forEach((field) => {
+    if (field.typeName == "geolocation") {
+      field.value.forEach((coordValue) => {
+        lat = coordValue.geolocationLatitude.value;
+        lng = coordValue.geolocationLongitude.value;
+        coord={ 
+          latitude: lat, 
+          longitude: lng 
+        }
+        coords.push(coord);
+        marker = createMarker(coord, item);
+      })
+
+    }
+  });
+  // Check if coordinates exist and return listContentElement Object
+  if (coords.length !== 0) {
+    return {
+      name: item.name,
+      url: item.url,
+      coordinates: coords,
+      marker: marker,
+    };
+  } else return null;
+
 }
 
 /**
  * Creates marker from info and result, by parsing coordinates and creating marker
- * with title, text and link to edmond page
- * @param {} info contains coordinates from json
+ * with name, text and link to edmond page
+ * @param {} coord contains coordinates from json
  * @param {*} result contains name and text of given entry
  * @returns created marker
  */
-function createMarker(info, result) {
+function createMarker(coord, item) {
   // Parse and add coordinates to a marker
-  var latLng = info.text.replace(" ", "").split(",");
-  var lat = parseFloat(latLng[0]);
-  var lng = parseFloat(latLng[1]);
+  var lat = parseFloat(coord.latitude);
+  var lng = parseFloat(coord.longitude);
   marker = L.marker([lat, lng]);
   marker.addTo(map);
   // Create link to an Edmond page through the marker popup
   marker.bindPopup(
     '<a class = "animation" href="' +
-      "https://edmond.mpdl.mpg.de/imeji/collection/" +
-      result.id +
-      '" target="_blank">' +
-      "<b>" +
-      result.title +
-      "</b><br>[" +
-      info.text +
-      "]" +
-      "</a>"
+    item.url+
+    '" target="_blank">' +
+    "<b>" +
+    item.name +
+    "</b><br>[" +
+    coord.latitude+","+coord.longitude +
+    "]" +
+    "</a>"
   );
   return marker;
 }
@@ -116,10 +122,9 @@ function makeList(listContent) {
     // listItem.innerHTML = element.coordinates;
     listItem.innerHTML =
       '<a class = "animation" href="' +
-      "https://edmond.mpdl.mpg.de/imeji/collection/" +
-      element.id +
+      element.url +
       '" target="_blank">' +
-      element.title +
+      element.name +
       "</a>";
     // A marker appears on the map with the data popup
     listItem.onmouseover = function () {
