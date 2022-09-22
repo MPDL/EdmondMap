@@ -118,7 +118,7 @@ function createMarker(coord, item) {
 function makeList(listContent) {
   var listContainer = document.getElementById("collectionsList");
   listContent.forEach((element) => {
-    listItem = document.createElement("li");
+    listItem = document.createElement("tr");
     // listItem.innerHTML = element.coordinates;
     listItem.innerHTML =
       '<a class = "animation" href="' +
@@ -134,3 +134,12 @@ function makeList(listContent) {
     listContainer.appendChild(listItem);
   });
 }
+
+let count = 0;
+const items_per_page = 10;
+const pagination_numbers_container = document.querySelector('.pagination-numbers');
+const next = document.querySelector('.next');
+const previous = document.querySelector('.previous');
+next.addEventListener('click', (e) => paginate("next"));
+previous.addEventListener('click', (e) => paginate("previous"));
+
