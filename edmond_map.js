@@ -39,12 +39,15 @@ fetch("https://edmond.mpdl.mpg.de/api/search?q=geolocationLatitude:*&per_page=10
         }
       });
 
-      makeList(listContent);
+      list = listContent;
+      makeList(list.slice(0, 3))
     });
   })
   .catch(function (err) {
     console.log("Fetch Error :-S", err);
   });
+
+  let list = []
 
 /**
  * Creates new listContentElement Object from given result
@@ -140,6 +143,14 @@ const items_per_page = 10;
 const pagination_numbers_container = document.querySelector('.pagination-numbers');
 const next = document.querySelector('.next');
 const previous = document.querySelector('.previous');
+
 next.addEventListener('click', (e) => paginate("next"));
 previous.addEventListener('click', (e) => paginate("previous"));
 
+const paginate = (p) => {
+  
+  var listContainer = document.getElementById("collectionsList");
+  listContainer.innerHTML = '';
+  makeList(list.slice(3,8))
+  
+}
