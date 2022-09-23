@@ -16,38 +16,72 @@ L.control
   })
   .addTo(map);
 
-//Fetch collections.json from server, parse it and visualize in the map.
-//fetch("https://qa-edmond.mpdl.mpg.de/edmond-map/EdmondMap/collections.json", {
-fetch("https://edmond.mpdl.mpg.de/api/search?q=geolocationLatitude:*&per_page=100&type=dataset&metadata_fields=citation:geolocation", {
-  mode: "cors",
-})
-  .then(function (response) {
-    if (response.status !== 200) {
-      console.log(
-        "Looks like there was a problem. Status Code: " + response.status
-      );
-      return;
-    }
-    // Examine the text in the response
-    response.json().then(function (result) {
-      var listContent = [];
-      //Iterating over items in data and creating listcontent items
-      result.data.items.forEach((item) => {
-        var listContentElement = createListContentElement(item);
-        if (listContentElement != null) {
-          listContent.push(listContentElement);
-        }
-      });
+let items = [];
+let list = []
 
-      list = listContent;
-      paginate(0)
-    });
+function getItems(offset, limit) {
+  //Fetch collections.json from server, parse it and visualize in the map.
+  fetch("/collections.json", {
+  //fetch("https://edmond.mpdl.mpg.de/api/search?q=geolocationLatitude:*&per_page=" + limit + "&start=" + offset + "&type=dataset&metadata_fields=citation:geolocation", {
+    mode: "cors",
   })
-  .catch(function (err) {
-    console.log("Fetch Error :-S", err);
+    .then(function (response) {
+      if (response.status !== 200) {
+        console.log(
+          "Looks like there was a problem. Status Code: " + response.status
+        );
+        return;
+      }
+      // Examine the text in the response
+      response.json().then(function (result) {
+        items = result.data.items;
+
+      //only for local testing
+      items = items.slice(offset,offset+items_per_page);
+
+      updateListAndMap();
+
+        //Iterating over items in data and creating listcontent items
+        /*
+        result.data.items.forEach((item) => {
+          var listContentElement = createListContentElement(item);
+          if (listContentElement != null) {
+            listContent.push(listContentElement);
+          }
+        });
+*/
+        //list = listContent;
+        //paginate(0)
+      });
+    })
+    .catch(function (err) {
+      console.log("Fetch Error :-S", err);
+    });
+}
+
+function updateListAndMap() {
+  
+  list=[];
+  //TODO: Clear all markers from map
+
+
+  //Clear list
+  var listContainer = document.getElementById("collectionsList").innerHTML = '';
+
+  items.forEach((item) => {
+    var listContentElement = createListContentElement(item);
+    if (listContentElement != null) {
+      list.push(listContentElement);
+    }
   });
 
-  let list = []
+  makeList(list);
+
+
+}
+
+
+
 
 /**
  * Creates new listContentElement Object from given result
@@ -150,13 +184,19 @@ previous.addEventListener('click', (e) => paginate("previous"));
 let offset = 0
 const paginate = (p) => {
   
-  var listContainer = document.getElementById("collectionsList");
-  listContainer.innerHTML = '';
+  //var listContainer = document.getElementById("collectionsList");
+  //listContainer.innerHTML = '';
   
   if(p === 'next') offset += items_per_page;
   else if(p === 'previous' && offset>0) offset -= items_per_page;
   else offset = 0;
  
-  makeList(list.slice(offset,offset+items_per_page))
-  
+ // makeList(list.slice(offset,offset+items_per_page))
+  getItems(offset, items_per_page);
+  //updateListAndMap();
 }
+
+
+paginate();
+
+
