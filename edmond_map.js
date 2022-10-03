@@ -61,9 +61,16 @@ function getItems(offset, limit) {
 
 function updateListAndMap() {
   
+  //remove markers from map
+  if(list && list.length!=0)
+  list.forEach((listContentElement)=>{
+    markers=listContentElement.markers
+    markers.forEach((marker)=>{
+      map.removeLayer(marker)
+    })
+  })
+  
   list=[];
-  //TODO: Clear all markers from map
-
 
   //Clear list
   var listContainer = document.getElementById("collectionsList").innerHTML = '';
@@ -91,7 +98,7 @@ function updateListAndMap() {
  */
 function createListContentElement(item) {
   var citationFields = item.metadataBlocks.citation.fields;
-  var marker;
+  var markers = [];
   var coords = [];
   citationFields.forEach((field) => {
     if (field.typeName == "geolocation") {
@@ -103,7 +110,7 @@ function createListContentElement(item) {
           longitude: lng 
         }
         coords.push(coord);
-        marker = createMarker(coord, item);
+        markers.push(createMarker(coord, item));
       })
 
     }
@@ -114,7 +121,7 @@ function createListContentElement(item) {
       name: item.name,
       url: item.url,
       coordinates: coords,
-      marker: marker,
+      markers: markers,
     };
   } else return null;
 
@@ -165,7 +172,7 @@ function makeList(listContent) {
       "</a>";
     // A marker appears on the map with the data popup
     listItem.onmouseover = function () {
-      element.marker.openPopup();
+      element.markers[0].openPopup();
     };
     // Add listItem to the listElement
     listContainer.appendChild(listItem);
@@ -173,7 +180,7 @@ function makeList(listContent) {
 }
 
 let count = 0;
-const items_per_page = 10;
+const items_per_page = 5;
 const pagination_numbers_container = document.querySelector('.pagination-numbers');
 const next = document.querySelector('.next');
 const previous = document.querySelector('.previous');
