@@ -26,9 +26,10 @@ body {
   color: rgb(0, 0, 0);
 }*/
 
-#collectionsListContainer {
+/*#collectionsListContainer {
   overflow: scroll;
-}
+}*/
+
 .animation:hover {
   transition: 0.4s;
   cursor: pointer;
@@ -85,6 +86,12 @@ a:hover {
   border-bottom-right-radius: 3px;
   border-top-left-radius: 0px;
   border-top-right-radius: 3px;
+}
+
+.previous:disabled, .previous:hover:disabled {
+  background-color: rgb(228, 228, 228);
+  background-image: linear-gradient(rgb(228, 228, 228) 0px, rgb(228, 228, 228)100%);
+  color: rgb(139, 139, 139);
 }
 
 .previous:hover, .next:hover {background-color: #e6e6e6;background-image:none;}

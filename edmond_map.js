@@ -18,6 +18,7 @@ L.control
 
 let items = [];
 let list = []
+let totalCount=0;
 
 function getItems(offset, limit) {
   //Fetch collections.json from server, parse it and visualize in the map.
@@ -35,8 +36,14 @@ function getItems(offset, limit) {
       // Examine the text in the response
       response.json().then(function (result) {
         items = result.data.items;
+        totalCount = result.data.total_count;
 
-      //only for local testing
+      if(totalCount-offset<=items_per_page){
+        next.style.display="none"   
+      }else{
+        next.style.display="inline-block"
+      }
+      //only for local testing        
       items = items.slice(offset,offset+items_per_page);
 
       updateListAndMap();
@@ -187,10 +194,11 @@ const previous = document.querySelector('.previous');
 
 next.addEventListener('click', (e) => paginate("next"));
 previous.addEventListener('click', (e) => paginate("previous"));
+//previous.style.display="none"
 
 let offset = 0
 const paginate = (p) => {
-  
+
   //var listContainer = document.getElementById("collectionsList");
   //listContainer.innerHTML = '';
   
@@ -198,9 +206,24 @@ const paginate = (p) => {
   else if(p === 'previous' && offset>0) offset -= items_per_page;
   else offset = 0;
  
+  /*if(offset==0)[
+    previous.style.display="none"
+  ]
+  else[
+    previous.style.display="inline-block"
+  ]*/
+
+  if(offset==0)[
+    previous.disabled = true
+  ]
+  else[
+    previous.disabled = false
+  ]
+
  // makeList(list.slice(offset,offset+items_per_page))
   getItems(offset, items_per_page);
   //updateListAndMap();
+
 }
 
 
